@@ -44,7 +44,7 @@ namespace MonitoringManagerAPI.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { Error = ex.Message });
+                return StatusCode(500, $"Erro ao efetuar login: {ex.Message}");
             }
         }
 
@@ -58,7 +58,7 @@ namespace MonitoringManagerAPI.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { Error = ex.Message });
+                return StatusCode(500, $"Erro ao registrar usuário: {ex.Message}");
             }
         }
 

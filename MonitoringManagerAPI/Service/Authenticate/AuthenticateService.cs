@@ -26,7 +26,7 @@ namespace MonitoringManagerAPI.Service.Authenticate
             }
 
 
-            var keyBytes = Encoding.ASCII.GetBytes("FSD3D334385TTFGUFUE90832D21ASD343DWE23R4");
+            var keyBytes = Encoding.ASCII.GetBytes("K0zLl1IM8Z8nECy5Zt3J+0/vXG4Q8qD5aZ2bL6XwVxA=");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -48,7 +48,7 @@ namespace MonitoringManagerAPI.Service.Authenticate
 
         public static bool VerifyPassword(string password, string storedHash)
         {
-            return BCrypt.Net.BCrypt.Verify(password, storedHash);
+                return BCrypt.Net.BCrypt.Verify(password, storedHash);
         }
 
     }

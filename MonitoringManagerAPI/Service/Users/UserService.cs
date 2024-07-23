@@ -1,6 +1,7 @@
 ﻿using MonitoringManagerAPI.Domain;
 using MonitoringManagerAPI.Domain.DTOs;
 using MonitoringManagerAPI.Domain.Enums;
+using MonitoringManagerAPI.Extensions.Validate;
 using MonitoringManagerAPI.Infra.Users;
 
 namespace MonitoringManagerAPI.Service.Users
@@ -30,6 +31,8 @@ namespace MonitoringManagerAPI.Service.Users
 
         public async Task Register(RegisterDTO register)
         {
+            UserValidationService.ValidateRegister(register);
+
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(register.Password);
 
             var user = new User

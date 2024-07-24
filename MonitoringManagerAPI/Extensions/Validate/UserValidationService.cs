@@ -42,6 +42,23 @@ namespace MonitoringManagerAPI.Extensions.Validate
             {
                 throw new ArgumentException("A senha deve conter pelo menos um caractere especial.");
             }
+
+            // Validar o e-mail
+            if (string.IsNullOrWhiteSpace(register.Email))
+            {
+                throw new ArgumentException("O e-mail não pode ser vazio ou nulo.");
+            }
+            if (!IsValidEmail(register.Email))
+            {
+                throw new ArgumentException("O formato do e-mail é inválido.");
+            }
+        }
+
+        private static bool IsValidEmail(string email)
+        {
+            string pattern = @"^(?!\.)[^\s@]+@[^\s@]+\.[^\s@]+$";
+            return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
         }
     }
 }
+

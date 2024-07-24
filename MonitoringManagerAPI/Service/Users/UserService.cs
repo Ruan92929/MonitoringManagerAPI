@@ -33,13 +33,16 @@ namespace MonitoringManagerAPI.Service.Users
         {
             UserValidationService.ValidateRegister(register);
 
+
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(register.Password);
 
             var user = new User
             {
                 Username = register.Username,
                 PasswordHash = hashedPassword,
-                Role = (Role)register.Role
+                Role = (Role)register.Role,
+                Email = register.Email,
+                EmployeeId = register.EmployeeId
             };
             await _userRepository.CreateAsync(user);
         }

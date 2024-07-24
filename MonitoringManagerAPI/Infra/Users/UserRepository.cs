@@ -17,11 +17,10 @@ namespace MonitoringManagerAPI.Infra.Users
             using (var conn = _dbSession.connection)
             {
                 string qry = @"
-                    INSERT INTO Users (Username, PasswordHash, Role) 
-                    VALUES (@Username, @PasswordHash, @Role); 
-                    SELECT SCOPE_IDENTITY();
+                    INSERT INTO Users (Username, PasswordHash, Role, Email, EmployeeId) 
+                    VALUES (@Username, @PasswordHash, @Role, @Email, @EmployeeId); 
+                    SELECT SCOPE_IDENTITY();";
 
-                ";
 
                 var insertedId = await conn.QueryFirstOrDefaultAsync<int>(qry, user);
                 user.Id = insertedId;

@@ -1,5 +1,6 @@
 ﻿using MonitoringManagerAPI.Domain;
 using MonitoringManagerAPI.Domain.DTOs;
+using MonitoringManagerAPI.Extensions.Validate;
 
 namespace MonitoringManagerAPI.Service.Users
 {
@@ -7,6 +8,9 @@ namespace MonitoringManagerAPI.Service.Users
     {
         Task Register(RegisterDTO register);
         Task<User> GetUserByName(string username);
+        Task EditUser(string username, EditUserDTO editModel);
+        Task DeleteUser(string username);
+        Task<User> GetUserById(int userId);
 
     }
 }

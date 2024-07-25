@@ -48,19 +48,46 @@ namespace MonitoringManagerAPI.Controllers
             }
         }
 
-        [HttpGet("Teste")]
-        [Authorize]
-        public IActionResult teste()
+        [HttpPut("Edit/{username}")]
+        public async Task<IActionResult> EditUser(string username, [FromBody] EditUserDTO model)
         {
             try
             {
-                return Ok("Funcionou");
+                await _userService.EditUser(username, model);
+                return Ok("Usuário editado com sucesso.");
             }
-            catch (UnauthorizedAccessException ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao registrar usuário: {ex.Message}");
+                return StatusCode(500, $"Erro ao editar usuário: {ex.Message}");
             }
         }
 
+        [HttpDelete("Delete/{username}")]
+        public async Task<IActionResult> DeleteUser(string username)
+        {
+            try
+            {
+                await _userService.DeleteUser(username);
+                return Ok("Usuário deletado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao deletar usuário: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            try
+            {
+                var user = await _userService.GetUserById(id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao obter usuário: {ex.Message}");
+            }
+        }
     }
 }

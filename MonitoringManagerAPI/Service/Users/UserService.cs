@@ -1,4 +1,5 @@
-﻿using MonitoringManagerAPI.Domain;
+﻿using Microsoft.Win32;
+using MonitoringManagerAPI.Domain;
 using MonitoringManagerAPI.Domain.DTOs;
 using MonitoringManagerAPI.Domain.Enums;
 using MonitoringManagerAPI.Extensions.Validate;
@@ -16,6 +17,16 @@ namespace MonitoringManagerAPI.Service.Users
             _userRepository = userRepository;
         }
 
+        //public void Exist(RegisterDTO register)
+        //{
+        //    if ( _userRepository.ExistUser(register.Username))
+        //        throw new InvalidOperationException("Este usuário já foi cadastrado em sistema.");
+
+        //    if( _userRepository.ExistEmail(register.Email))
+        //        throw new InvalidOperationException("Este endereço de Email já foi cadastrado em sistema.");
+
+        //}
+
 
         public async Task<User> GetUserByName(string username)
         {
@@ -31,6 +42,8 @@ namespace MonitoringManagerAPI.Service.Users
 
         public async Task Register(RegisterDTO register)
         {
+            //Exist(register);
+
             UserValidationService.ValidateRegister(register);
 
 
@@ -47,6 +60,46 @@ namespace MonitoringManagerAPI.Service.Users
             await _userRepository.CreateAsync(user);
         }
 
+        public async Task EditUser(string username, EditUserDTO editModel)
+        {
+            var user = await _userRepository.GetUserByName(username);
+
+            if (user == null)
+            {
+                throw new ArgumentException("Usuário não encontrado.");
+            }
+
+            UserValidationService.ValidateEdit(editModel.Email, editModel.EmployeeId);
+
+            user.Email = editModel.Email;
+            user.EmployeeId = editModel.EmployeeId;
+
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task DeleteUser(string username)
+        {
+            var user = await _userRepository.GetUserByName(username);
+
+            if (user == null)
+            {
+                throw new ArgumentException("Usuário não encontrado.");
+            }
+
+            await _userRepository.DeleteAsync(user.Id);
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            var user = await _userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentException("Usuário não encontrado.");
+            }
+
+            return user;
+        }
 
     }
 }

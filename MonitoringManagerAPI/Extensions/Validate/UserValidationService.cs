@@ -1,4 +1,5 @@
 ﻿using MonitoringManagerAPI.Domain.DTOs;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace MonitoringManagerAPI.Extensions.Validate
@@ -43,21 +44,34 @@ namespace MonitoringManagerAPI.Extensions.Validate
                 throw new ArgumentException("A senha deve conter pelo menos um caractere especial.");
             }
 
-            // Validar o e-mail
-            if (string.IsNullOrWhiteSpace(register.Email))
-            {
-                throw new ArgumentException("O e-mail não pode ser vazio ou nulo.");
-            }
-            if (!IsValidEmail(register.Email))
-            {
-                throw new ArgumentException("O formato do e-mail é inválido.");
-            }
+            ValidateEmail(register.Email);
+            ValidateEdit(register.Email, register.EmployeeId);
         }
 
-        private static bool IsValidEmail(string email)
+        public static void ValidateEdit(string email, string employeeId)
         {
-            string pattern = @"^(?!\.)[^\s@]+@[^\s@]+\.[^\s@]+$";
-            return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("O Email é obrigatório.");
+
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                throw new ArgumentException("Email inválido.");
+
+            if (employeeId != null)
+                throw new ArgumentException("ID do empregado inválido.");
+        }
+
+        public static bool ValidateEmail(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                throw new ArgumentException("O formato de e-mail está incorreto.");
+            }
         }
     }
 }

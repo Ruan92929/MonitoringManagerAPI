@@ -20,7 +20,8 @@ namespace MonitoringManagerAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO model)
+        //[Authorize]
+        public async Task<IActionResult> Register([FromBody] UserDTO model)
         {
             try
             {     
@@ -48,12 +49,13 @@ namespace MonitoringManagerAPI.Controllers
             }
         }
 
-        [HttpPut("Edit/{username}")]
-        public async Task<IActionResult> EditUser(string username, [FromBody] EditUserDTO model)
+        [HttpPut("Edit/{id}")]
+        [Authorize]
+        public async Task<IActionResult> EditUser(int id, [FromBody] UserDTO model)
         {
             try
             {
-                await _userService.EditUser(username, model);
+                await _userService.EditUser(id, model);
                 return Ok("Usuário editado com sucesso.");
             }
             catch (Exception ex)
@@ -62,12 +64,13 @@ namespace MonitoringManagerAPI.Controllers
             }
         }
 
-        [HttpDelete("Delete/{username}")]
-        public async Task<IActionResult> DeleteUser(string username)
+        [HttpDelete("Delete/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser(int id)
         {
             try
             {
-                await _userService.DeleteUser(username);
+                await _userService.DeleteUser(id);
                 return Ok("Usuário deletado com sucesso.");
             }
             catch (Exception ex)
@@ -77,6 +80,7 @@ namespace MonitoringManagerAPI.Controllers
         }
 
         [HttpGet("GetById/{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
             try

@@ -17,15 +17,14 @@ namespace MonitoringManagerAPI.Service.Users
             _userRepository = userRepository;
         }
 
-        //public void Exist(RegisterDTO register)
-        //{
-        //    if ( _userRepository.ExistUser(register.Username))
-        //        throw new InvalidOperationException("Este usuário já foi cadastrado em sistema.");
+        public void Exist(UserDTO register)
+        {
+            if (_userRepository.ExistUser(register.Username))
+                throw new InvalidOperationException("Este usuário já foi cadastrado em sistema.");
 
-        //    if( _userRepository.ExistEmail(register.Email))
-        //        throw new InvalidOperationException("Este endereço de Email já foi cadastrado em sistema.");
-
-        //}
+            if (_userRepository.ExistEmail(register.Email))
+                throw new InvalidOperationException("Este endereço de Email já foi cadastrado em sistema.");
+        }
 
 
         public async Task<User> GetUserByName(string username)
@@ -40,14 +39,14 @@ namespace MonitoringManagerAPI.Service.Users
         }
 
 
-        public async Task Register(RegisterDTO register)
+        public async Task Register(UserDTO register)
         {
-            //Exist(register);
+            Exist(register);
 
-            UserValidationService.ValidateRegister(register);
+            UserValidationService.ValidateUser(register);
 
 
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(register.Password);
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(register.PasswordHash);
 
             var user = new User
             {
@@ -60,26 +59,31 @@ namespace MonitoringManagerAPI.Service.Users
             await _userRepository.CreateAsync(user);
         }
 
-        public async Task EditUser(string username, EditUserDTO editModel)
+        public async Task EditUser(int id, UserDTO editModel)
         {
-            var user = await _userRepository.GetUserByName(username);
+            var user = await _userRepository.GetUserById(id);
 
             if (user == null)
             {
                 throw new ArgumentException("Usuário não encontrado.");
             }
 
-            UserValidationService.ValidateEdit(editModel.Email, editModel.EmployeeId);
+            UserValidationService.ValidateUser(editModel);
 
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(editModel.PasswordHash);
+
+            user.Username = editModel.Username;
+            user.PasswordHash = hashedPassword;
+            user.Role = (Role)editModel.Role;
             user.Email = editModel.Email;
             user.EmployeeId = editModel.EmployeeId;
 
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task DeleteUser(string username)
+        public async Task DeleteUser(int id)
         {
-            var user = await _userRepository.GetUserByName(username);
+            var user = await _userRepository.GetUserById(id);
 
             if (user == null)
             {

@@ -15,13 +15,14 @@ namespace MonitoringManagerAPI.Extensions.Register
         {
 
             services.AddScoped<DbSession>();
+            services.AddSingleton<DapperContext>();
 
             //DI Repository
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             //DI Services
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IAuthenticateService, AuthenticateService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
 
 
             services.AddControllers();

@@ -6,10 +6,10 @@ namespace MonitoringManagerAPI.Service.Users
 {
     public interface IUserService
     {
-        Task Register(RegisterDTO register);
+        Task Register(UserDTO register);
         Task<User> GetUserByName(string username);
-        Task EditUser(string username, EditUserDTO editModel);
-        Task DeleteUser(string username);
+        Task EditUser(int id, UserDTO editModel);
+        Task DeleteUser(int id);
         Task<User> GetUserById(int userId);
 
     }
